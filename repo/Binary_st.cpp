@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <ctime>
-#include<cmath>
+#include <cmath>
 #include <chrono>
 using namespace std;
 
@@ -52,14 +52,11 @@ public:
 
 void input(string filename)
 { 
-    bool working = true;
     std::ifstream input_file;
 
     input_file.open(filename);
 
     srand (time(0));
-    while (working) {
-
         if ( input_file.is_open() ) {
         string value;
         while ( input_file.good() && getline( input_file, value ) ) {
@@ -75,8 +72,6 @@ void input(string filename)
         } else {
             cout << "Input file is not avaialble";  
         }
-    working = false;
-}
     input_file.close();
 }
 
