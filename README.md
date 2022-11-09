@@ -1,3 +1,3 @@
 # 311
 
-Valerie: I uploaded the binary search tree from 350 and a binary search tree to balanced search tree conversion. The Lab3 file is what i thought we could put the coed in.
+Valerie: The binary search tree is done. I checked and all the functions work. I also implemented it in another file
