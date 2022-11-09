@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
-#include <queue>
+#include <cstdlib>
+#include <fstream>
+#include <ctime>
 #include<cmath>
+#include <chrono>
 using namespace std;
 
 class node {
@@ -25,91 +28,74 @@ class node {
 
     };
 
- void insert(node*, string, int);
- void remove(node*, int);
- void search();
- bool Keysearcher(int, bool);
- void print(node*);
-void remove(node*, int);
-int getRand();
+void input(string);
+bool insert(int, string);
+void insert_real(node*, string, int);
+bool remove(int);
+void remove_real(node*, int);
+bool Stringsearch(string);
+void StringSearcher_real(node*, string);
+bool Keysearcher(int);
+void printer();
+void print_real(node*);
 
-const int size = pow(2,22); 
+const int size = pow(2,22);
+bool found = false; 
+bool hasRoot = false;
 node* root = new node();
-int entries = 1;
-int main(int argc, char **argv)
-{ 
-    bool hasRoot = false;
-    bool working = true;
-    int option = 0;
-    while (working) {
-        if(root->nulll) {
-            hasRoot =false;
-        }
-        cout << "\nWhat would you like to do:\n1. Insert\n2. Delete\n3. Search\n4. Print\n5. Exit\n";
-        cin >> option;
-        switch (option) {
-            case 1:
-            int key = getRand();
-                if(hasRoot) {
-                    string value;
-                    cout << "what value are you inserting?\n";
-                    cin >> value;
-                } else {
-                    string value;
-                    hasRoot=true;
-                    cout << "What value would you like to insert\n";
-                    cin >> value;
-                    root =new node(key, value);
-                    root->left = new node();
-                    root->right = new node();
-                }
-                break;
-            case 2:
-            if(hasRoot) {
-                    int key;
-                    cout << "what key are you removing?\n";
-                    cin >> key;
-                    if(key == root->key && root->left->nulll && root->right->nulll) {
-                        root = new node();
-                    } else if (Keysearcher(key, false)) {
-                        remove(root, key);
-                    } else {
-                    cout << key << " does not exists in binary tree.\n";
-                    }
-            } else {
-                cout << "There is nothing in the tree to remove.\n";
-            }
-                break;
-            case 3:
-                if(hasRoot) {
-                search();
-            } else {
-                cout << "There is nothing in the tree to search for.\n";
-            }
-                break;
-            case 4: {
-            node cur = *root;
-            print(root);
-            }
-            break;
-            default:
-                working = false;
-            break;
-        }
+int total = 0;
+
+class BinaryTree {
+public:
+    BinaryTree() {
     }
 
+void input(string filename)
+{ 
+    bool working = true;
+    std::ifstream input_file;
 
+    input_file.open(filename);
+
+    srand (time(0));
+    while (working) {
+
+        if ( input_file.is_open() ) {
+        string value;
+        while ( input_file.good() && getline( input_file, value ) ) {
+            int key = rand()%size;
+            if(!(total > size)) {
+                if (insert(key, value)) {
+                    total++;
+                }    
+            } else {
+                cout << "Max size reached.\n";
+            }
+        } 
+        } else {
+            cout << "Input file is not avaialble";  
+        }
+    working = false;
+}
+    input_file.close();
 }
 
-int getRand() {
-    int key;
-    do {
-        key = rand()%size;
-    } while(!Keysearcher(key, false));
-    return key;
+bool insert(int key, string value) {
+    if(!(Keysearcher(key))) {
+        if(hasRoot) {
+        insert_real(root, value, key);
+        } else {
+            hasRoot = true;
+            root =new node(key, value);
+            root->left = new node();
+            root->right = new node();
+        }
+        return true;
+    } else {
+        return false;
+    }
 }
-
- void insert(node* cur, string value, int key) {
+void insert_real(node* cur, string value, int key) {
     int holderL = cur->key;
        if (holderL < key ) {
             bool right = cur->right->nulll;
@@ -119,7 +105,7 @@ int getRand() {
                 baby->left = new node();
                 baby->right = new node();
             } else {
-                insert(cur->right, value, key);
+                insert_real(cur->right, value, key);
             }
         } else {
             bool left = cur->left->nulll;
@@ -129,13 +115,21 @@ int getRand() {
                 baby->left = new node();
                 baby->right = new node();
             } else {
-                insert(cur->left, value, key);
+                insert_real(cur->left, value, key);
             }
         }
 
 }
  
- void remove(node* cur, int value) {
+ bool remove(int v) {
+    if(Keysearcher(v)) {
+        remove_real(root, v);
+        return true;
+    } else {
+        return false;
+    }
+ }
+ void remove_real(node* cur, int value) {
 
     //Node to deltete is at bottom if tree
     bool done1 = false;
@@ -240,49 +234,60 @@ int getRand() {
 
     }
  }
- 
- void search() {
-    int key;
-    bool found;
-        cout << "What key are you looking for?\n";
-        cin >> key;
-        found = Keysearcher(key, false);
 
-    if(found) {
-        cout << key << " exists within the binary tree.\nHere is the path traversed:\n";
-    } else {
-        cout << key << " does not exists within the binary tree.\nHere is the path traversed:\n";
-    }
-}
-
-bool Keysearcher(int key, bool printer) {
-bool done = false;
+bool Keysearcher(int key) {
+    if(hasRoot) {
+    bool done = false;
     node cur = *root;
     while(!done) {
         int curV = cur.key;
         if (cur.key == key) {
-            if(printer) cout << key << "\n";
             return true;
         } else if (cur.key < key && !cur.right->nulll) {
-            if(printer) cout << cur.key << " ";
             cur = *cur.right;
         } else if (cur.key > key  && !cur.left->nulll) {
-            if(printer) cout << cur.value << " ";
             cur = *cur.left;
         } else {
             done = true;
         }
 
     }
+    }
     return false;
 }
 
-void print(node* cur)
+void printer() {
+    if(hasRoot)
+        print_real(root);
+}
+
+void print_real(node* cur)
 {
     if (cur->nulll)
         return;
  
-    print(cur->left);
-    cout << cur->value << ' ';
-    print(cur->right);
+    print_real(cur->left);
+    cout << '(' << cur->key << ',' << cur->value << ") \n";
+    print_real(cur->right);
 }
+
+bool StringSearcher(string value) {
+    if(hasRoot) {
+    found = false;
+    StringSearcher_real(root, value);
+    return found;
+    }
+    return false;
+}
+void StringSearcher_real(node* cur, string value) {
+    if (cur->value.compare(value) == 0) {
+        found = true;
+    } 
+    
+    if(!cur->left->nulll)
+        StringSearcher_real(cur->left, value);
+    if(!cur->right->nulll)
+        StringSearcher_real(cur->right, value);
+
+}
+};
