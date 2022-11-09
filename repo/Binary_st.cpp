@@ -33,11 +33,15 @@ bool insert(int, string);
 void insert_real(node*, string, int);
 bool remove(int);
 void remove_real(node*, int);
+bool Stringsearch(string);
+void StringSearcher_real(node*, string);
 bool Keysearcher(int);
 void printer();
 void print_real(node*);
 
-const int size = pow(2,22); 
+const int size = pow(2,22);
+bool found = false; 
+bool hasRoot = false;
 node* root = new node();
 int total = 0;
 
@@ -48,7 +52,6 @@ public:
 
 void input(string filename)
 { 
-    bool hasRoot = false;
     bool working = true;
     std::ifstream input_file;
 
@@ -59,19 +62,12 @@ void input(string filename)
 
         if ( input_file.is_open() ) {
         string value;
-        while ( input_file.good() ) {
-            input_file >> value;
+        while ( input_file.good() && getline( input_file, value ) ) {
             int key = rand()%size;
             if(!(total > size)) {
-                total++;
-                if(hasRoot) {
-                    insert(key, value); 
-                } else {
-                    hasRoot = true;
-                    root =new node(key, value);
-                    root->left = new node();
-                    root->right = new node();
-                }   
+                if (insert(key, value)) {
+                    total++;
+                }    
             } else {
                 cout << "Max size reached.\n";
             }
@@ -81,11 +77,19 @@ void input(string filename)
         }
     working = false;
 }
+    input_file.close();
 }
 
 bool insert(int key, string value) {
     if(!(Keysearcher(key))) {
+        if(hasRoot) {
         insert_real(root, value, key);
+        } else {
+            hasRoot = true;
+            root =new node(key, value);
+            root->left = new node();
+            root->right = new node();
+        }
         return true;
     } else {
         return false;
@@ -232,7 +236,8 @@ void insert_real(node* cur, string value, int key) {
  }
 
 bool Keysearcher(int key) {
-bool done = false;
+    if(hasRoot) {
+    bool done = false;
     node cur = *root;
     while(!done) {
         int curV = cur.key;
@@ -247,11 +252,13 @@ bool done = false;
         }
 
     }
+    }
     return false;
 }
 
 void printer() {
-    print_real(root);
+    if(hasRoot)
+        print_real(root);
 }
 
 void print_real(node* cur)
@@ -264,4 +271,23 @@ void print_real(node* cur)
     print_real(cur->right);
 }
 
+bool StringSearcher(string value) {
+    if(hasRoot) {
+    found = false;
+    StringSearcher_real(root, value);
+    return found;
+    }
+    return false;
+}
+void StringSearcher_real(node* cur, string value) {
+    if (cur->value.compare(value) == 0) {
+        found = true;
+    } 
+    
+    if(!cur->left->nulll)
+        StringSearcher_real(cur->left, value);
+    if(!cur->right->nulll)
+        StringSearcher_real(cur->right, value);
+
+}
 };

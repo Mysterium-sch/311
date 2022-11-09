@@ -14,6 +14,7 @@ int main(int argc, char **argv)
 
     BinaryTree map;
     map.input(filename);
+    cout << map.StringSearcher("I ") << "\n";
     map.printer();
 
 }
