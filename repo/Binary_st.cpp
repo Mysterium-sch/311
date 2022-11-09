@@ -28,26 +28,30 @@ class node {
 
     };
 
- void insert(node*, string, int);
- void remove(node*, int);
- void search();
- bool Keysearcher(int, bool);
- void print(node*);
-void remove(node*, int);
-int getRand();
+void input(string);
+bool insert(int, string);
+void insert_real(node*, string, int);
+bool remove(int);
+void remove_real(node*, int);
+bool Keysearcher(int);
+void printer();
+void print_real(node*);
 
 const int size = pow(2,22); 
 node* root = new node();
 int total = 0;
-int main(int argc, char **argv)
+
+class BinaryTree {
+public:
+    BinaryTree() {
+    }
+
+void input(string filename)
 { 
     bool hasRoot = false;
     bool working = true;
     std::ifstream input_file;
-    string filename;
 
-    cout << "Please input name of ASCII file to sort (please include file extension)\n";
-    cin >> filename;
     input_file.open(filename);
 
     srand (time(0));
@@ -61,7 +65,7 @@ int main(int argc, char **argv)
             if(!(total > size)) {
                 total++;
                 if(hasRoot) {
-                    insert(root, value, key); 
+                    insert(key, value); 
                 } else {
                     hasRoot = true;
                     root =new node(key, value);
@@ -75,14 +79,19 @@ int main(int argc, char **argv)
         } else {
             cout << "Input file is not avaialble";  
         }
-
-    print(root);
     working = false;
 }
 }
 
-
- void insert(node* cur, string value, int key) {
+bool insert(int key, string value) {
+    if(!(Keysearcher(key))) {
+        insert_real(root, value, key);
+        return true;
+    } else {
+        return false;
+    }
+}
+void insert_real(node* cur, string value, int key) {
     int holderL = cur->key;
        if (holderL < key ) {
             bool right = cur->right->nulll;
@@ -92,7 +101,7 @@ int main(int argc, char **argv)
                 baby->left = new node();
                 baby->right = new node();
             } else {
-                insert(cur->right, value, key);
+                insert_real(cur->right, value, key);
             }
         } else {
             bool left = cur->left->nulll;
@@ -102,13 +111,21 @@ int main(int argc, char **argv)
                 baby->left = new node();
                 baby->right = new node();
             } else {
-                insert(cur->left, value, key);
+                insert_real(cur->left, value, key);
             }
         }
 
 }
  
- void remove(node* cur, int value) {
+ bool remove(int v) {
+    if(Keysearcher(v)) {
+        remove_real(root, v);
+        return true;
+    } else {
+        return false;
+    }
+ }
+ void remove_real(node* cur, int value) {
 
     //Node to deltete is at bottom if tree
     bool done1 = false;
@@ -213,34 +230,17 @@ int main(int argc, char **argv)
 
     }
  }
- 
- void search() {
-    int key;
-    bool found;
-        cout << "What key are you looking for?\n";
-        cin >> key;
-        found = Keysearcher(key, false);
 
-    if(found) {
-        cout << key << " exists within the binary tree.\nHere is the path traversed:\n";
-    } else {
-        cout << key << " does not exists within the binary tree.\nHere is the path traversed:\n";
-    }
-}
-
-bool Keysearcher(int key, bool printer) {
+bool Keysearcher(int key) {
 bool done = false;
     node cur = *root;
     while(!done) {
         int curV = cur.key;
         if (cur.key == key) {
-            if(printer) cout << key << "\n";
             return true;
         } else if (cur.key < key && !cur.right->nulll) {
-            if(printer) cout << cur.key << " ";
             cur = *cur.right;
         } else if (cur.key > key  && !cur.left->nulll) {
-            if(printer) cout << cur.value << " ";
             cur = *cur.left;
         } else {
             done = true;
@@ -250,12 +250,18 @@ bool done = false;
     return false;
 }
 
-void print(node* cur)
+void printer() {
+    print_real(root);
+}
+
+void print_real(node* cur)
 {
     if (cur->nulll)
         return;
  
-    print(cur->left);
+    print_real(cur->left);
     cout << '(' << cur->key << ',' << cur->value << ") \n";
-    print(cur->right);
+    print_real(cur->right);
 }
+
+};
