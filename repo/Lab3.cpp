@@ -19,12 +19,11 @@ class input {
         }
 };
 
-const int size = pow(2,22); 
 
 
 int main(int argc, char **argv)
 { 
-    input map[size];
+   
   
 
 }

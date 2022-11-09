@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
-#include <queue>
+#include <cstdlib>
+#include <ctime>
 #include<cmath>
+#include <chrono>
 using namespace std;
 
 class node {
@@ -39,22 +41,23 @@ int entries = 1;
 int main(int argc, char **argv)
 { 
     bool hasRoot = false;
+    long incrementer = 0;
     bool working = true;
     int option = 0;
+    srand (time(0));
     while (working) {
-        if(root->nulll) {
-            hasRoot =false;
-        }
         cout << "\nWhat would you like to do:\n1. Insert\n2. Delete\n3. Search\n4. Print\n5. Exit\n";
         cin >> option;
-        switch (option) {
-            case 1:
-            int key = getRand();
+            if(option == 1) {
                 if(hasRoot) {
+                    int key = rand()%size;;
+                    cout << key << "\n";
                     string value;
                     cout << "what value are you inserting?\n";
                     cin >> value;
+                    insert(root, value, key);
                 } else {
+                    int key = rand()%size;
                     string value;
                     hasRoot=true;
                     cout << "What value would you like to insert\n";
@@ -63,8 +66,7 @@ int main(int argc, char **argv)
                     root->left = new node();
                     root->right = new node();
                 }
-                break;
-            case 2:
+            } else if (option == 2) {
             if(hasRoot) {
                     int key;
                     cout << "what key are you removing?\n";
@@ -79,35 +81,21 @@ int main(int argc, char **argv)
             } else {
                 cout << "There is nothing in the tree to remove.\n";
             }
-                break;
-            case 3:
+            } else if (option == 3) {
                 if(hasRoot) {
                 search();
             } else {
                 cout << "There is nothing in the tree to search for.\n";
             }
-                break;
-            case 4: {
+            } else if (option == 4) {
             node cur = *root;
             print(root);
-            }
-            break;
-            default:
+            } else  {
                 working = false;
-            break;
+            }
         }
-    }
-
-
 }
 
-int getRand() {
-    int key;
-    do {
-        key = rand()%size;
-    } while(!Keysearcher(key, false));
-    return key;
-}
 
  void insert(node* cur, string value, int key) {
     int holderL = cur->key;
@@ -283,6 +271,6 @@ void print(node* cur)
         return;
  
     print(cur->left);
-    cout << cur->value << ' ';
+    cout << '(' << cur->key << ',' << cur->value << ") \n";
     print(cur->right);
 }
