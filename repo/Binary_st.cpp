@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <fstream>
 #include <ctime>
 #include<cmath>
 #include <chrono>
@@ -37,63 +38,47 @@ int getRand();
 
 const int size = pow(2,22); 
 node* root = new node();
-int entries = 1;
+int total = 0;
 int main(int argc, char **argv)
 { 
     bool hasRoot = false;
-    long incrementer = 0;
     bool working = true;
-    int option = 0;
+    std::ifstream input_file;
+    string filename;
+
+    cout << "Please input name of ASCII file to sort (please include file extension)\n";
+    cin >> filename;
+    input_file.open(filename);
+
     srand (time(0));
     while (working) {
-        cout << "\nWhat would you like to do:\n1. Insert\n2. Delete\n3. Search\n4. Print\n5. Exit\n";
-        cin >> option;
-            if(option == 1) {
+
+        if ( input_file.is_open() ) {
+        string value;
+        while ( input_file.good() ) {
+            input_file >> value;
+            int key = rand()%size;
+            if(!(total > size)) {
+                total++;
                 if(hasRoot) {
-                    int key = rand()%size;;
-                    cout << key << "\n";
-                    string value;
-                    cout << "what value are you inserting?\n";
-                    cin >> value;
-                    insert(root, value, key);
+                    insert(root, value, key); 
                 } else {
-                    int key = rand()%size;
-                    string value;
-                    hasRoot=true;
-                    cout << "What value would you like to insert\n";
-                    cin >> value;
+                    hasRoot = true;
                     root =new node(key, value);
                     root->left = new node();
                     root->right = new node();
-                }
-            } else if (option == 2) {
-            if(hasRoot) {
-                    int key;
-                    cout << "what key are you removing?\n";
-                    cin >> key;
-                    if(key == root->key && root->left->nulll && root->right->nulll) {
-                        root = new node();
-                    } else if (Keysearcher(key, false)) {
-                        remove(root, key);
-                    } else {
-                    cout << key << " does not exists in binary tree.\n";
-                    }
+                }   
             } else {
-                cout << "There is nothing in the tree to remove.\n";
+                cout << "Max size reached.\n";
             }
-            } else if (option == 3) {
-                if(hasRoot) {
-                search();
-            } else {
-                cout << "There is nothing in the tree to search for.\n";
-            }
-            } else if (option == 4) {
-            node cur = *root;
-            print(root);
-            } else  {
-                working = false;
-            }
+        } 
+        } else {
+            cout << "Input file is not avaialble";  
         }
+
+    print(root);
+    working = false;
+}
 }
 
 
