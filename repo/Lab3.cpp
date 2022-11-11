@@ -10,18 +10,19 @@ using namespace std;
 
 const int size = pow(2,22);
 int total = 0;
-string value;
 BinaryTree map;
 
 queue<thread> threadQueue;
+vector<string> values;
 
-void insert_helper(int);
+void insert_helper(int, int);
 void inserter(int, string);
 void deleter(int);
 void lookup(int);
 
 int main(int argc, char **argv)
 { 
+    int valuesIndex = 0;
 
     while(!threadQueue.empty()) {
         threadQueue.pop();
@@ -30,6 +31,7 @@ int main(int argc, char **argv)
     string type;
     int threadcount;
     string holder;
+    string value;
 
     string filename;
     cout << "Please input name of ASCII file to sort (please include file extension)\n";
@@ -47,7 +49,7 @@ int main(int argc, char **argv)
     }
 
     while(input_file.good()) {
-        //cout << threadQueue.size() << " : " << threadcount << "\n";
+        cout << threadQueue.size() << " : " << threadcount << "\n";
         if(threadQueue.size() >= threadcount) {
           threadQueue.front().join();
           threadQueue.front().detach();
@@ -64,7 +66,9 @@ int main(int argc, char **argv)
             if (total>=size) {
                 cout << "Max size reached";
             } else {
-                threadQueue.push(std::thread(insert_helper, key));
+                values.push_back(value);
+                threadQueue.push(std::thread(insert_helper, (key), valuesIndex));
+                valuesIndex++;
             }
         } else if (type.compare("D") == 0) {
             threadQueue.push(std::thread(deleter, key));
@@ -92,14 +96,16 @@ int main(int argc, char **argv)
     input_file.close();
 }
 
-    void insert_helper(int key) {
-        inserter(key, value);
+    void insert_helper(int key, int index) {
+        string v = values.at(index);
+        inserter(key, v);
         threadQueue.front().detach();
         threadQueue.pop();
+        cout << v << " : " << threadQueue.size() << " OK\n";
     }
     void inserter(int key, string textt) {
         if(map.insert(key, textt)) {
-                cout << textt << " OK\n";
+            cout << textt << " : " << threadQueue.size() << " OK\n";
                 total++;
             } else {
                 cout << "FAIL\n";
