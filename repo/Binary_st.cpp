@@ -31,49 +31,23 @@ class node {
 void input(string);
 bool insert(int, string);
 void insert_real(node*, string, int);
-bool remove(int);
-void remove_real(node*, int);
+bool remove_key(int);
+void remove_key_real(node*, int);
 bool Stringsearch(string);
 void StringSearcher_real(node*, string);
 bool Keysearcher(int);
 void printer();
 void print_real(node*);
 
-const int size = pow(2,22);
 bool found = false; 
 bool hasRoot = false;
 node* root = new node();
-int total = 0;
+
 
 class BinaryTree {
 public:
     BinaryTree() {
     }
-
-void input(string filename)
-{ 
-    std::ifstream input_file;
-
-    input_file.open(filename);
-
-    srand (time(0));
-        if ( input_file.is_open() ) {
-        string value;
-        while ( input_file.good() && getline( input_file, value ) ) {
-            int key = rand()%size;
-            if(!(total > size)) {
-                if (insert(key, value)) {
-                    total++;
-                }    
-            } else {
-                cout << "Max size reached.\n";
-            }
-        } 
-        } else {
-            cout << "Input file is not avaialble";  
-        }
-    input_file.close();
-}
 
 bool insert(int key, string value) {
     if(!(Keysearcher(key))) {
@@ -116,15 +90,15 @@ void insert_real(node* cur, string value, int key) {
 
 }
  
- bool remove(int v) {
+ bool remove_key(int v) {
     if(Keysearcher(v)) {
-        remove_real(root, v);
+        remove_key_real(root, v);
         return true;
     } else {
         return false;
     }
  }
- void remove_real(node* cur, int value) {
+ void remove_key_real(node* cur, int value) {
 
     //Node to deltete is at bottom if tree
     bool done1 = false;
