@@ -1,0 +1,6 @@
+CC = gcc
+CFLAGS = -wall -g
+
+all: Lab3.cpp Binary_st.cpp ;  g++ -g -o runner Lab3.cpp Binary_st.cpp
+
+clean: ; rm runner

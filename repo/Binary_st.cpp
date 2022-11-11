@@ -35,22 +35,21 @@ bool remove_key(int);
 void remove_key_real(node*, int);
 bool Stringsearch(string);
 void StringSearcher_real(node*, string);
-bool Keysearcher(int);
+string Keysearcher(int);
 void printer();
 void print_real(node*);
-
-bool found = false; 
-bool hasRoot = false;
-node* root = new node();
 
 
 class BinaryTree {
 public:
+    bool found = false; 
+    bool hasRoot = false;
+    node* root = new node();
     BinaryTree() {
     }
 
 bool insert(int key, string value) {
-    if(!(Keysearcher(key))) {
+    if((Keysearcher(key)).compare("nulll") != 0) {
         if(hasRoot) {
         insert_real(root, value, key);
         } else {
@@ -61,7 +60,7 @@ bool insert(int key, string value) {
         }
         return true;
     } else {
-        return false;
+         return false;
     }
 }
 void insert_real(node* cur, string value, int key) {
@@ -91,7 +90,7 @@ void insert_real(node* cur, string value, int key) {
 }
  
  bool remove_key(int v) {
-    if(Keysearcher(v)) {
+    if(Keysearcher(v).compare("nulll") != 0) {
         remove_key_real(root, v);
         return true;
     } else {
@@ -204,14 +203,14 @@ void insert_real(node* cur, string value, int key) {
     }
  }
 
-bool Keysearcher(int key) {
+string Keysearcher(int key) {
     if(hasRoot) {
     bool done = false;
     node cur = *root;
     while(!done) {
         int curV = cur.key;
         if (cur.key == key) {
-            return true;
+            return cur.value;
         } else if (cur.key < key && !cur.right->nulll) {
             cur = *cur.right;
         } else if (cur.key > key  && !cur.left->nulll) {
@@ -222,7 +221,7 @@ bool Keysearcher(int key) {
 
     }
     }
-    return false;
+    return "nulll";
 }
 
 void printer() {

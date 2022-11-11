@@ -1,10 +1,14 @@
-I hello
-I I 
-I hate
-I this
-I stupid
-I project
-I please
-I help
-I me
+I 12 hello
+I 32 I 
+I 34 hate
+I 1 this
+I 11 stupid
+I 10 project
+I 100 please
+I 65 help
+I 78 me
 P
+D 65
+P
+L 65
+L 55
