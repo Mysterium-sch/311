@@ -38,6 +38,7 @@ void StringSearcher_real(node*, string);
 string Keysearcher(int);
 void printer();
 void print_real(node*);
+void reset();
 
 
 class BinaryTree {
@@ -48,8 +49,14 @@ public:
     BinaryTree() {
     }
 
+void reset() {
+    found = false; 
+    hasRoot = false;
+    root = new node();
+}
+
 bool insert(int key, string value) {
-    if((Keysearcher(key)).compare("nulll") != 0) {
+    if((Keysearcher(key)).compare("nulll") == 0) {
         if(hasRoot) {
         insert_real(root, value, key);
         } else {
