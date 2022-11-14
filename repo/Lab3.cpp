@@ -3,7 +3,9 @@
 #include<cmath>
 #include <fstream>
 #include <thread> 
+#include <mutex>
 #include <queue>
+
 #include "Binary_st.cpp"
 
 using namespace std;
@@ -14,14 +16,15 @@ BinaryTree map;
 
 queue<thread> threadQueue;
 vector<string> values;
+mutex in,del,look;
 
 void insert_helper(int, int);
 void inserter(int, string);
 void deleter(int);
 void lookup(int);
 
-int main(int argc, char **argv)
-{ 
+
+int main(int argc, char **argv) { 
     int valuesIndex = 0;
 
     while(!threadQueue.empty()) {
@@ -37,11 +40,10 @@ int main(int argc, char **argv)
     cout << "Please input name of ASCII file to sort (please include file extension)\n";
     cin >> filename;
 
-    std::ifstream input_file;
+    ifstream input_file;
     input_file.open(filename);
 
     input_file >> type;
-
     if (type.compare("N")==0) {
         input_file >> holder;
         threadcount = stoi(holder);
@@ -49,25 +51,36 @@ int main(int argc, char **argv)
     }
 
     while(input_file.good()) {
-        cout << threadQueue.size() << " : " << threadcount << "\n";
+        //cout << threadQueue.size() << " : " << threadcount << "\n";
         if(threadQueue.size() >= threadcount) {
-          threadQueue.front().join();
-          threadQueue.front().detach();
-          threadQueue.pop();
+        while(threadQueue.front().joinable()) {
+            try {
+                threadQueue.front().detach();
+                threadQueue.pop();
+            } catch (exception& exc) { 
+                threadQueue.front().join();
+                std::this_thread::sleep_for (std::chrono::seconds(1));
+            
+            }
         }
+        }
+        
         input_file >> type;
-
         // Get key from file
         string key_hold;
         input_file >> key_hold;
-        int key = stoi(key_hold);
+        int key;
+        key = stoi(key_hold);
+  
         value = "";
+        //cout << threadQueue.size() << "\n";
         if (type.compare("I") == 0 && getline( input_file, value )) {
             if (total>=size) {
                 cout << "Max size reached";
             } else {
-                values.push_back(value);
+                //cout << threadQueue.size() << "\n";
                 threadQueue.push(std::thread(insert_helper, (key), valuesIndex));
+                values.push_back(value);
                 valuesIndex++;
             }
         } else if (type.compare("D") == 0) {
@@ -80,58 +93,82 @@ int main(int argc, char **argv)
     }
 
     //cout << "done with page\n";
-    cout << threadQueue.size() << " : " << threadcount << "\n";
 
     while(!threadQueue.empty()) {
-        threadQueue.front().join();
-    if(!threadQueue.front().joinable()) {
-        threadQueue.front().detach();
-        cout << "here\n";
-        threadQueue.pop();
+        cout << threadQueue.size() << " : " << threadcount << "\n";
+        while(threadQueue.front().joinable()) {
+            try {
+                threadQueue.front().join();
+            } catch (exception& exc) { 
+                std::this_thread::sleep_for (std::chrono::seconds(1));
+            }
         }
+        threadQueue.front().detach();
+        threadQueue.pop();
+
     }
 
     map.reset();
-
     input_file.close();
 }
 
-    void insert_helper(int key, int index) {
-        string v = values.at(index);
-        inserter(key, v);
-        threadQueue.front().detach();
-        threadQueue.pop();
-        cout << v << " : " << threadQueue.size() << " OK\n";
+// Needs to wait on lookup and deleter
+void insert_helper(int key, int index) {
+    while(in.try_lock()) { }
+    lock (del,look);
+    threadQueue.front().detach();
+    threadQueue.pop();
+
+    string v = values.at(index);
+    inserter(key, v);
+
+    del.unlock();
+    look.unlock();
+}
+void inserter(int key, string textt) {
+    if(map.insert(key, textt)) {
+        cout << textt << " : " << key <<  " OK\n";
+        total++;
+        //cout << "OK\n";
+    } else {
+        cout << "FAIL\n";
     }
-    void inserter(int key, string textt) {
-        if(map.insert(key, textt)) {
-            cout << textt << " : " << threadQueue.size() << " OK\n";
-                total++;
-            } else {
-                cout << "FAIL\n";
-            }
+}
+
+// Needs to wait on lookup and insert
+void deleter(int key) {
+    while(del.try_lock()) { }
+    lock (in,look);
+    threadQueue.front().detach();
+    threadQueue.pop();
+    if(map.remove_key(key)) {
+        cout << "OK\n";
+        total--;
+    } else {
+        cout << "FAIL\n";
     }
 
-    void deleter(int key) {
-        if(map.remove_key(key)) {
-                cout << "OK\n";
-                total--;
-            } else {
-                cout << "FAIL\n";
-            }
-            threadQueue.front().detach();
-            threadQueue.pop();
+    in.unlock();
+    look.unlock();
+
+}
+
+// Needs to wait on insert and delete
+void lookup(int key) {
+    while(look.try_lock()) { }
+    lock (del,in);
+
+    threadQueue.front().detach();
+    threadQueue.pop();
+
+    string found = map.Keysearcher(key);
+        if(found.compare("nulll") != 0) {
+            cout << found << "\n";
+        } else {
+            cout << "no " << key << "\n";
     }
 
-    void lookup(int key) {
-        string found = map.Keysearcher(key);
-            if(found.compare("nulll") != 0) {
-                cout << found << "\n";
-            } else {
-                cout << "no " << key << "\n";
-            }
-            threadQueue.front().detach();
-            threadQueue.pop();
-    }
-    
+    del.unlock();
+    in.unlock();
+}
 
