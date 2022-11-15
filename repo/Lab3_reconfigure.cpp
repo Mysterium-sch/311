@@ -21,7 +21,7 @@ queue<pthread_t> threads;
 queue<string> output;
 
 // Pthread things
-pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
+mutex mutexer;
 
 // Methods
 void* insert(void*);
@@ -32,8 +32,6 @@ void deleter_helper(int);
 
 void* lookup(void*);
 void lookup_helper(int);
-
-
 
 int main(int argc, char **argv) { 
 
@@ -92,7 +90,7 @@ int main(int argc, char **argv) {
             if(total<size) {
             string holder = key + " " + value;
             threads.push( pthread_create(&ptid[index], NULL, &insert, (void*) &holder));
-            std::this_thread::sleep_for (std::chrono::microseconds(10));
+            std::this_thread::sleep_for (std::chrono::milliseconds(10));
             } else {
                 string out = "Max size of " + to_string(size) + " reached";
                 output.push(out);
@@ -102,12 +100,12 @@ int main(int argc, char **argv) {
             //delete
             int *h = &keyRand;
             threads.push( pthread_create(&ptid[index], NULL, &deleter, (void*) h));
-            std::this_thread::sleep_for (std::chrono::microseconds(10));
+            std::this_thread::sleep_for (std::chrono::milliseconds(10));
         } else if (type.compare("L") == 0) {
             //lookup
             int *h = &keyRand;
             threads.push( pthread_create(&ptid[index], NULL, &lookup, (void*) h));
-            std::this_thread::sleep_for (std::chrono::microseconds(10));
+            std::this_thread::sleep_for (std::chrono::milliseconds(10));
         } else {
             cout << "Invalid Format\n";
         }
@@ -147,7 +145,7 @@ void* insert(void *v) {
     // wait on lookup/mutex
     // wait on delete/mutex
 
-    pthread_mutex_lock(&mutexer);
+    std::lock_guard<std::mutex> guard(mutexer);
 
     string *keyAndValue = (string *) v;
    
@@ -161,7 +159,7 @@ void* insert(void *v) {
     int key = stoi(kv);
     inserter(key, value);
     threads.pop();
-    pthread_mutex_unlock(&mutexer);
+
     return 0;
 
 }
@@ -179,13 +177,12 @@ void* deleter(void *v) {
     // wait on insert/mutex
     // wait on lookup/mutex
 
-    pthread_mutex_lock(&mutexer);
+    std::lock_guard<std::mutex> guard(mutexer);
 
     int *key = (int *) v;
     deleter_helper(*key);
 
     threads.pop();
-    pthread_mutex_unlock(&mutexer);
 
     return 0;
     
@@ -203,13 +200,12 @@ void deleter_helper(int key) {
 void* lookup (void *v) {
     // wait on insert/mutex
     // wait on delete/mutex
-    pthread_mutex_lock(&mutexer);
+   std::lock_guard<std::mutex> guard(mutexer);
 
     int *key = (int *) v;
     lookup_helper(*key);
 
     threads.pop();
-    pthread_mutex_unlock(&mutexer);
     
     return 0;
 }
@@ -223,5 +219,3 @@ void lookup_helper(int key) {
     }
 
 }
-
-

@@ -15,3 +15,7 @@ I 100 I'm here now
 D 65
 L 21
 L 100
+I 25 just
+I 21 god
+D 25
+L 21
