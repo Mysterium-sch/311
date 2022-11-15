@@ -22,9 +22,6 @@ queue<string> output;
 
 // Pthread things
 pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t dataNotInserted = PTHREAD_COND_INITIALIZER;
-pthread_cond_t dataNotDeleted = PTHREAD_COND_INITIALIZER;
-pthread_cond_t dataNotFound = PTHREAD_COND_INITIALIZER;
 
 // Methods
 void* insert(void*);
@@ -130,7 +127,6 @@ int main(int argc, char **argv) {
     while(!threads.empty()) {
         pthread_join(threads.front(), NULL);
         pthread_exit(NULL);
-        index = (index+1)%threadcount;
 
     }
 
