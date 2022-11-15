@@ -145,7 +145,7 @@ void* insert(void *v) {
     // wait on lookup/mutex
     // wait on delete/mutex
 
-    std::lock_guard<std::mutex> guard(mutexer);
+    //std::lock_guard<std::mutex> guard(mutexer);
 
     string *keyAndValue = (string *) v;
    
@@ -177,7 +177,7 @@ void* deleter(void *v) {
     // wait on insert/mutex
     // wait on lookup/mutex
 
-    std::lock_guard<std::mutex> guard(mutexer);
+    //std::lock_guard<std::mutex> guard(mutexer);
 
     int *key = (int *) v;
     deleter_helper(*key);
@@ -187,7 +187,6 @@ void* deleter(void *v) {
     return 0;
     
 }
-
 void deleter_helper(int key) {
     if(map.remove_key(key)) {
          output.push("OK");
@@ -200,7 +199,7 @@ void deleter_helper(int key) {
 void* lookup (void *v) {
     // wait on insert/mutex
     // wait on delete/mutex
-   std::lock_guard<std::mutex> guard(mutexer);
+   //std::lock_guard<std::mutex> guard(mutexer);
 
     int *key = (int *) v;
     lookup_helper(*key);

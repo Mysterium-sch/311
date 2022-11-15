@@ -4,6 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include <cmath>
+#include <mutex>
 #include <chrono>
 using namespace std;
 
@@ -45,6 +46,7 @@ class BinaryTree {
 public:
     bool found = false; 
     bool hasRoot = false;
+    std::mutex mutexy;
     node* root = new node();
     BinaryTree() {
     }
@@ -56,7 +58,9 @@ void reset() {
 }
 
 bool insert(int key, string value) {
-    if((Keysearcher(key)).compare("nulll") == 0) {
+    bool results;
+    mutexy.lock();
+    if((Keysearcher_inner(key)).compare("nulll") == 0) {
         if(hasRoot) {
         insert_real(root, value, key);
         } else {
@@ -65,10 +69,13 @@ bool insert(int key, string value) {
             root->left = new node();
             root->right = new node();
         }
-        return true;
+        results = true;
     } else {
-         return false;
+        results = false;
     }
+
+    mutexy.unlock();
+    return results;
 }
 void insert_real(node* cur, string value, int key) {
     int holderL = cur->key;
@@ -97,15 +104,18 @@ void insert_real(node* cur, string value, int key) {
 }
  
  bool remove_key(int v) {
-    if(Keysearcher(v).compare("nulll") != 0) {
+    mutexy.lock();
+    if(Keysearcher_inner(v).compare("nulll") != 0) {
         remove_key_real(root, v);
+        mutexy.unlock();
         return true;
     } else {
+        mutexy.unlock();
         return false;
     }
  }
  void remove_key_real(node* cur, int value) {
-
+    
     //Node to deltete is at bottom if tree
     bool done1 = false;
     bool complete = false;
@@ -210,7 +220,7 @@ void insert_real(node* cur, string value, int key) {
     }
  }
 
-string Keysearcher(int key) {
+string Keysearcher_inner(int key) {
     if(hasRoot) {
     bool done = false;
     node cur = *root;
@@ -225,9 +235,32 @@ string Keysearcher(int key) {
         } else {
             done = true;
         }
+    }
+    }
+    return "nulll";
+}
 
+
+string Keysearcher(int key) {
+    mutexy.lock();
+    if(hasRoot) {
+    bool done = false;
+    node cur = *root;
+    while(!done) {
+        int curV = cur.key;
+        if (cur.key == key) {
+            mutexy.unlock();
+            return cur.value;
+        } else if (cur.key < key && !cur.right->nulll) {
+            cur = *cur.right;
+        } else if (cur.key > key  && !cur.left->nulll) {
+            cur = *cur.left;
+        } else {
+            done = true;
+        }
     }
     }
+    mutexy.unlock();
     return "nulll";
 }
 
