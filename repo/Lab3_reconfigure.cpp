@@ -80,6 +80,7 @@ int main(int argc, char **argv) {
 
         words >> type;
         words >> key;
+        //cout << key << "\n";
         int keyRand = stoi(key);
         while (words >> temp)
             value += temp + " ";
@@ -90,15 +91,18 @@ int main(int argc, char **argv) {
             //insert
             string holder = key + " " + value;
             threads.push( pthread_create(&ptid[index], NULL, &insert, (void*) &holder));
+            std::this_thread::sleep_for (std::chrono::microseconds(10));
 
         } else if (type.compare("D") == 0) {
             //delete
             int *h = &keyRand;
             threads.push( pthread_create(&ptid[index], NULL, &deleter, (void*) h));
+            std::this_thread::sleep_for (std::chrono::microseconds(10));
         } else if (type.compare("L") == 0) {
             //lookup
             int *h = &keyRand;
             threads.push( pthread_create(&ptid[index], NULL, &lookup, (void*) h));
+            std::this_thread::sleep_for (std::chrono::microseconds(10));
         } else {
             cout << "Invalid Format\n";
         }
@@ -108,8 +112,6 @@ int main(int argc, char **argv) {
         if(threads.size() >= threadcount) {
             pthread_join(threads.front(), NULL);
             pthread_exit(NULL);
-            threads.pop();
- 
         }
 
         index = (index+1)%threadcount;
@@ -121,7 +123,6 @@ int main(int argc, char **argv) {
         pthread_join(threads.front(), NULL);
         pthread_exit(NULL);
         index = (index+1)%threadcount;
-        threads.pop();
 
     }
 
@@ -136,6 +137,7 @@ void* insert(void *v) {
     pthread_mutex_lock(&mutexer);
 
     string *keyAndValue = (string *) v;
+   
     stringstream ss(*keyAndValue);
     string kv, value, hold;
     ss >> kv;
@@ -145,7 +147,7 @@ void* insert(void *v) {
 
     int key = stoi(kv);
     inserter(key, value);
-
+    threads.pop();
     pthread_mutex_unlock(&mutexer);
     return 0;
 
@@ -169,6 +171,7 @@ void* deleter(void *v) {
     int *key = (int *) v;
     deleter_helper(*key);
 
+    threads.pop();
     pthread_mutex_unlock(&mutexer);
 
     return 0;
@@ -186,12 +189,12 @@ void deleter_helper(int key) {
 void* lookup (void *v) {
     // wait on insert/mutex
     // wait on delete/mutex
-
     pthread_mutex_lock(&mutexer);
 
     int *key = (int *) v;
     lookup_helper(*key);
 
+    threads.pop();
     pthread_mutex_unlock(&mutexer);
     
     return 0;
