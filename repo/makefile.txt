@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -wall -g
 
-all: Lab3.cpp Binary_st.cpp ;  g++ -std=c++11 -pthread -g -o runner Lab3.cpp Binary_st.cpp
+all: Lab3_reconfigure.cpp Binary_st.cpp ;  g++ -std=c++11 -pthread -g -o mapper Lab3_reconfigure.cpp Binary_st.cpp ; ./mapper tester.txt output.txt
 
 clean: ; rm runner

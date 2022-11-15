@@ -18,6 +18,7 @@ BinaryTree map;
 // Indivudal operation queue
 queue<string> actionQueue;
 queue<pthread_t> threads;
+queue<string> output;
 
 // Pthread things
 pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
@@ -42,19 +43,21 @@ int main(int argc, char **argv) {
     string type, holder, value, key;
     int threadcount;
 
-    string filename;
-    cout << "Please input name of ASCII file to sort (please include file extension)\n";
-    cin >> filename;
+    string in_filename;
+    in_filename = argv[1];
+    string out_filename;
+    out_filename = argv[2];
 
     ifstream input_file;
-    input_file.open(filename);
+    input_file.open(in_filename);
 
     // Get thread count
     input_file >> type;
     if (type.compare("N")==0) {
         input_file >> holder;
         threadcount = stoi(holder);
-        cout << "Using " << threadcount << " threads\n";
+        string out = "Using " + to_string(threadcount) + " threads";
+        output.push(out);
     }
 
     pthread_t ptid[threadcount];
@@ -89,9 +92,14 @@ int main(int argc, char **argv) {
         
         if(type.compare("I") == 0) {
             //insert
+            if(total<size) {
             string holder = key + " " + value;
             threads.push( pthread_create(&ptid[index], NULL, &insert, (void*) &holder));
             std::this_thread::sleep_for (std::chrono::microseconds(10));
+            } else {
+                string out = "Max size of " + to_string(size) + " reached";
+                output.push(out);
+            }
 
         } else if (type.compare("D") == 0) {
             //delete
@@ -126,7 +134,16 @@ int main(int argc, char **argv) {
 
     }
 
-    cout << "done\n";
+    //Output to file
+    ofstream outFile;
+    outFile.open(out_filename);
+    while(!output.empty()) {
+        outFile << output.front() << "\n";
+        output.pop();
+
+    }
+
+    cout << "File Execution Completed\n";
 
 }
 
@@ -154,11 +171,11 @@ void* insert(void *v) {
 }
 void inserter(int key, string textt) {
     if(map.insert(key, textt)) {
-        cout << textt << " : " << key <<  " OK\n";
+        //cout << textt << " : " << key <<  " OK\n";
         total++;
-        //cout << "OK\n";
+        output.push("OK");
     } else {
-        cout << "FAIL\n";
+        output.push("FAIL");
     }
 }
 
@@ -177,12 +194,13 @@ void* deleter(void *v) {
     return 0;
     
 }
+
 void deleter_helper(int key) {
     if(map.remove_key(key)) {
-        cout << "OK\n";
+         output.push("OK");
         total--;
     } else {
-        cout << "FAIL\n";
+        output.push("FAIL");
     }
 }
 
@@ -202,9 +220,10 @@ void* lookup (void *v) {
 void lookup_helper(int key) {
     string found = map.Keysearcher(key);
         if(found.compare("nulll") != 0) {
-            cout << found << "\n";
+            output.push(found);
         } else {
-            cout << "no " << key << "\n";
+            string out = "no " + to_string(key); 
+            output.push(out);
     }
 
 }
