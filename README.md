@@ -1,3 +1,8 @@
 # 311
 
-Valerie: The binary search tree is done. I checked and all the functions work. I also implemented it in another file
+## Running the project
+1. Download and extract the project
+1. Move to repo directly in terminal
+1. run make -f makefile.txt in terminal
+    1. note that running the makefile compiles and runs the project
+    1. The input text is from tester.txt and the ouput is to output.txt
