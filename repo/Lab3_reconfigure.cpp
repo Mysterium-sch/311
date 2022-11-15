@@ -17,19 +17,24 @@ BinaryTree map;
 
 // Indivudal operation queue
 queue<string> actionQueue;
+queue<pthread_t> threads;
 
 // Pthread things
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t dataNotInserted = PTHREAD_COND_INITIALIZER;
 pthread_cond_t dataNotDeleted = PTHREAD_COND_INITIALIZER;
 pthread_cond_t dataNotFound = PTHREAD_COND_INITIALIZER;
 
 // Methods
-void insert_helper(int, int);
+void* insert(void*);
 void inserter(int, string);
-void deleter(int);
-void lookup(int);
-void* executer(void*);
+
+void* deleter(void*);
+void deleter_helper(int);
+
+void* lookup(void*);
+void lookup_helper(int);
+
 
 
 int main(int argc, char **argv) { 
@@ -52,8 +57,8 @@ int main(int argc, char **argv) {
         cout << "Using " << threadcount << " threads\n";
     }
 
-    pthread_t threads[threadcount];
-    int threadID[threadcount];
+    pthread_t ptid[threadcount];
+    int index = 0;
 
     //Pull all actions from input file
     while(input_file.good()) {
@@ -79,25 +84,125 @@ int main(int argc, char **argv) {
         while (words >> temp)
             value += temp + " ";
         
+        // Proccess action
         
         if(type.compare("I") == 0) {
             //insert
+            string holder = key + " " + value;
+            threads.push( pthread_create(&ptid[index], NULL, &insert, (void*) &holder));
+
         } else if (type.compare("D") == 0) {
             //delete
+            int *h = &keyRand;
+            threads.push( pthread_create(&ptid[index], NULL, &deleter, (void*) h));
         } else if (type.compare("L") == 0) {
             //lookup
+            int *h = &keyRand;
+            threads.push( pthread_create(&ptid[index], NULL, &lookup, (void*) h));
         } else {
             cout << "Invalid Format\n";
         }
         actionQueue.pop();
 
+        // Make sure threads stay under 4
+        if(threads.size() >= threadcount) {
+            pthread_join(threads.front(), NULL);
+            pthread_exit(NULL);
+            threads.pop();
+ 
+        }
 
-
-
+        index = (index+1)%threadcount;
 
     }
 
+    // Empty queue
+    while(!threads.empty()) {
+        pthread_join(threads.front(), NULL);
+        pthread_exit(NULL);
+        index = (index+1)%threadcount;
+        threads.pop();
 
+    }
+
+    cout << "done\n";
+
+}
+
+void* insert(void *v) {
+    // wait on lookup/mutex
+    // wait on delete/mutex
+
+    pthread_mutex_lock(&mutexer);
+
+    string *keyAndValue = (string *) v;
+    stringstream ss(*keyAndValue);
+    string kv, value, hold;
+    ss >> kv;
+    while (ss>>hold) {
+        value += hold + " ";
+    }
+
+    int key = stoi(kv);
+    inserter(key, value);
+
+    pthread_mutex_unlock(&mutexer);
+    return 0;
+
+}
+void inserter(int key, string textt) {
+    if(map.insert(key, textt)) {
+        cout << textt << " : " << key <<  " OK\n";
+        total++;
+        //cout << "OK\n";
+    } else {
+        cout << "FAIL\n";
+    }
+}
+
+void* deleter(void *v) {
+    // wait on insert/mutex
+    // wait on lookup/mutex
+
+    pthread_mutex_lock(&mutexer);
+
+    int *key = (int *) v;
+    deleter_helper(*key);
+
+    pthread_mutex_unlock(&mutexer);
+
+    return 0;
+    
+}
+void deleter_helper(int key) {
+    if(map.remove_key(key)) {
+        cout << "OK\n";
+        total--;
+    } else {
+        cout << "FAIL\n";
+    }
+}
+
+void* lookup (void *v) {
+    // wait on insert/mutex
+    // wait on delete/mutex
+
+    pthread_mutex_lock(&mutexer);
+
+    int *key = (int *) v;
+    lookup_helper(*key);
+
+    pthread_mutex_unlock(&mutexer);
+    
+    return 0;
+}
+void lookup_helper(int key) {
+    string found = map.Keysearcher(key);
+        if(found.compare("nulll") != 0) {
+            cout << found << "\n";
+        } else {
+            cout << "no " << key << "\n";
+    }
 
 }
 
