@@ -9,13 +9,3 @@ I 100 please
 I 100 oop I shouldn't be here
 I 65 help
 I 78 me
-D 100
-L 100
-I 100 I'm here now
-D 65
-L 21
-L 100
-I 25 just
-I 21 god
-D 25
-L 21

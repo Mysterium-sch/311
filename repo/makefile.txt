@@ -3,4 +3,4 @@ CFLAGS = -wall -g
 
 all: Lab3_reconfigure.cpp Binary_st.cpp ;  g++ -std=c++11 -pthread -g -o mapper Lab3_reconfigure.cpp Binary_st.cpp ; ./mapper input.txt output.txt
 
-clean: ; rm runner
+clean: ; rm mapper

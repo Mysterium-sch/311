@@ -21,7 +21,8 @@ queue<pthread_t> threads;
 queue<string> output;
 
 // Pthread things
-mutex mutexer;
+pthread_cond_t cond1 = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
 
 // Methods
 void* insert(void*);
@@ -71,6 +72,8 @@ int main(int argc, char **argv) {
 
         // Proccess Info
     while(!actionQueue.empty()) {
+    
+        while(threads.size() < threadcount && !actionQueue.empty()) {
         string temp;
         value = "";
         string nextAction = actionQueue.front();
@@ -89,8 +92,7 @@ int main(int argc, char **argv) {
             //insert
             if(total<size) {
             string holder = key + " " + value;
-            threads.push( pthread_create(&ptid[index], NULL, &insert, (void*) &holder));
-            std::this_thread::sleep_for (std::chrono::milliseconds(10));
+            threads.emplace( pthread_create(&ptid[index], NULL, &insert, (void*) &holder));
             } else {
                 string out = "Max size of " + to_string(size) + " reached";
                 output.push(out);
@@ -110,23 +112,16 @@ int main(int argc, char **argv) {
             cout << "Invalid Format\n";
         }
         actionQueue.pop();
-
-        // Make sure threads stay under 4
-        if(threads.size() >= threadcount) {
-            pthread_join(threads.front(), NULL);
-            pthread_exit(NULL);
-        }
-
         index = (index+1)%threadcount;
-
+        }
+        // Make sure threads stay under 4
+        
+        
+            pthread_cond_signal(&cond1);
+            pthread_join(threads.front(), NULL);
+            threads.pop();
     }
 
-    // Empty queue
-    while(!threads.empty()) {
-        pthread_join(threads.front(), NULL);
-        pthread_exit(NULL);
-
-    }
 
     //Output to file
     ofstream outFile;
@@ -142,10 +137,8 @@ int main(int argc, char **argv) {
 }
 
 void* insert(void *v) {
-    // wait on lookup/mutex
-    // wait on delete/mutex
-
-    //std::lock_guard<std::mutex> guard(mutexer);
+    pthread_mutex_lock(&mutexer);
+    pthread_cond_wait(&cond1, &mutexer);
 
     string *keyAndValue = (string *) v;
    
@@ -158,17 +151,19 @@ void* insert(void *v) {
 
     int key = stoi(kv);
     inserter(key, value);
-    threads.pop();
+    
+    pthread_mutex_unlock(&mutexer);
 
     return 0;
 
 }
 void inserter(int key, string textt) {
     if(map.insert(key, textt)) {
-        //cout << textt << " : " << key <<  " OK\n";
+        cout << textt << " : " << key <<  " OK\n";
         total++;
         output.push("OK");
     } else {
+        cout << textt << " : " << key <<  " FAIL\n";
         output.push("FAIL");
     }
 }
@@ -199,8 +194,8 @@ void deleter_helper(int key) {
 void* lookup (void *v) {
     // wait on insert/mutex
     // wait on delete/mutex
-   //std::lock_guard<std::mutex> guard(mutexer);
 
+    //std::lock_guard<std::mutex> guard(mutexer);
     int *key = (int *) v;
     lookup_helper(*key);
 
