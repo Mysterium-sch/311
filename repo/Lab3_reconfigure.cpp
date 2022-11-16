@@ -28,6 +28,8 @@ pthread_cond_t cond1 = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
 
 // Methods
+void* letEmRun(void *);
+
 void* insert(void*);
 void inserter(string);
 
@@ -76,6 +78,7 @@ int main(int argc, char **argv) {
         // Proccess Info
     while(!actionQueue.empty()) {
 
+        // Queue up threads
         index = 0;
         while(index<threadcount && !actionQueue.empty()) {
         string temp;
@@ -119,8 +122,11 @@ int main(int argc, char **argv) {
         index++;
         }
 
+        // Proccess the queued threads
         for(int i = 0; i<threads.size(); i++) {
-            pthread_join(ptid[i], NULL);
+            pthread_t val;
+            pthread_create(&val, NULL, &letEmRun, (void *) val);
+            pthread_join(val, NULL);
         }
     }
 
@@ -136,16 +142,24 @@ int main(int argc, char **argv) {
     cout << "File Execution Completed\n";
 }
 
+void* letEmRun(void *v) {
+    pthread_mutex_lock(&mutexer);
+    pthread_cond_signal(&cond1);
+    pthread_mutex_unlock(&mutexer);
+    pthread_exit(NULL);
+}
+
 void* insert(void *v) {
     pthread_mutex_lock(&mutexer);
-    //pthread_cond_wait(&cond1, &mutexer);
+    pthread_cond_wait(&cond1, &mutexer);
     string keyAndValue = words.at((*((int *)v)-1));
     threads.pop();
     
     inserter(keyAndValue);
-
+    
     pthread_mutex_unlock(&mutexer);
-    return 0;
+    
+    pthread_exit(NULL);
 
 }
 void inserter(string keyAndValue) {

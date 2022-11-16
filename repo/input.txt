@@ -6,11 +6,6 @@ I 1 this
 I 21 stupid
 I 10 project
 I 100 please
-I 100 cayse I dogs
+I 100 oops I shouldnt be here
 I 65 help
 I 78 me
-D 78
-L 78
-D 65
-D 65
-L 100
