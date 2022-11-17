@@ -132,7 +132,6 @@ void* letEmRun(void *v) {
     pthread_exit(NULL);
 }
 
-
 void inserter(string keyAndValue) {
     stringstream ss(keyAndValue);
     string kv, value, hold;
@@ -140,7 +139,7 @@ void inserter(string keyAndValue) {
     while (ss>>hold) {
         value += hold + " ";
     }
-
+    value = value.substr(0, value.length()-1);
     int key = stoi(kv);
     
     if(map.insert(key, value)) {
