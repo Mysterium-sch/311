@@ -1,14 +1,16 @@
 #include <iostream>
 #include <string>
-#include<cmath>
+#include <cmath>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include <queue>
 #include <pthread.h>
 
 #include "Binary_st.cpp"
 
 using namespace std;
+using namespace std::chrono;
 
 int words_in = 0;
 const int size = pow(2,22);
@@ -30,6 +32,8 @@ void deleter(int);
 void lookup(int);
 
 int main(int argc, char **argv) { 
+
+    auto start = high_resolution_clock::now();
 
     string type, holder, value, key;
     int threadcount;
@@ -64,6 +68,7 @@ int main(int argc, char **argv) {
 
         // Gets rid of first line
         actionQueue.pop();
+        auto mid = high_resolution_clock::now();
 
         // Proccess Info
     while(!actionQueue.empty()) {
@@ -90,7 +95,18 @@ int main(int argc, char **argv) {
         output.pop();
     }
 
+    map.reset();
+    outFile.close();
+
     cout << "File Execution Completed\n";
+    
+    ofstream exect;
+    exect.open("Execution_Time");
+    auto stop = high_resolution_clock::now();
+    auto duration1 = duration_cast<microseconds>(mid - start);
+    auto duration2 = duration_cast<microseconds>(stop - mid);
+    exect << "For " << threadcount << " threads:\tRead File Time:\t" << duration1.count() << "\tExecution Time:\t" << duration2.count() << "\n";
+    exect.close();
 }
 
 void* letEmRun(void *v) {
@@ -102,7 +118,10 @@ void* letEmRun(void *v) {
 
         words_A >> type;
         words_A >> key;
-        int keyRand = stoi(key);
+        int keyRand = -1;
+        if(type.compare("I") == 0 || type.compare("D") == 0 || type.compare("L") == 0) {
+            keyRand = stoi(key);
+            
         while (words_A >> temp)
             value += temp + " ";
         
@@ -124,10 +143,10 @@ void* letEmRun(void *v) {
         } else if (type.compare("L") == 0) {
             //lookup
             lookup(keyRand);
-        } else {
-            output.push("Invalid Format");
         }
-    actionQueue.pop();
+        actionQueue.pop();
+        }
+
     pthread_mutex_unlock(&mutexer);
     pthread_exit(NULL);
 }
