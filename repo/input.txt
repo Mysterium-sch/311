@@ -1,11 +1,13 @@
-N 1
-I 12 hello
-I 32 I
-I 34 hate
-I 1 this
-I 21 stupid
-I 10 project
-I 100 please
-I 100 oops I shouldnt be here
-I 65 help
-I 78 me
+N 4
+I 12 hello - OK
+I 32 I - OK
+I 34 hate - OK
+I 1 this - OK
+I 21 stupid - OK
+I 10 project - OK
+I 100 please - OK
+I 100 oops I shouldnt be here - FAIL
+I 65 help - OK
+I 78 me - OK
+D 78
+L 78
