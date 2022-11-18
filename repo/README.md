@@ -20,3 +20,4 @@ For testing, I did a few different things.
     1. All the test can be found in execution_time.txt
 
 # Categorize your performance on reasonable input
+I would argue that the performance is high. The program can handle many inserts, deletes, and lookups and are very accurate. The Program also scales (from 118,730.5 fro 1 thread to 52,965.6 for 4). While the program does have area of improvement, their is a high performance rate.
