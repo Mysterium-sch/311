@@ -1,0 +1,53 @@
+For 500 Lines:
+
+For 4 threads:  Read File Time: 148     Execution Time: 77,255   Output File Time: 956
+For 4 threads:  Read File Time: 178     Execution Time: 47,706   Output File Time: 527
+For 4 threads:  Read File Time: 160     Execution Time: 77,872   Output File Time: 885
+For 4 threads:  Read File Time: 167     Execution Time: 24,517   Output File Time: 371
+For 4 threads:  Read File Time: 95      Execution Time: 35,284   Output File Time: 267
+For 4 threads:  Read File Time: 246     Execution Time: 69,476   Output File Time: 290
+For 4 threads:  Read File Time: 121     Execution Time: 35,683   Output File Time: 279
+For 4 threads:  Read File Time: 282     Execution Time: 69,446   Output File Time: 329
+For 4 threads:  Read File Time: 124     Execution Time: 38,526   Output File Time: 335
+For 4 threads:  Read File Time: 241     Execution Time: 53,891   Output File Time: 484
+
+For 4 threads: Average Read File Time: 176.2   Average Execution Time: 52,965.6   Average Output File Time: 472.3
+
+For 3 threads:  Read File Time: 135     Execution Time: 56,471   Output File Time: 406
+For 3 threads:  Read File Time: 129     Execution Time: 57,008   Output File Time: 327
+For 3 threads:  Read File Time: 146     Execution Time: 61,736   Output File Time: 453
+For 3 threads:  Read File Time: 173     Execution Time: 65,667   Output File Time: 496
+For 3 threads:  Read File Time: 166     Execution Time: 59,952   Output File Time: 346
+For 3 threads:  Read File Time: 152     Execution Time: 50,145   Output File Time: 351
+For 3 threads:  Read File Time: 135     Execution Time: 61,832   Output File Time: 400
+For 3 threads:  Read File Time: 122     Execution Time: 47,009   Output File Time: 614
+For 3 threads:  Read File Time: 139     Execution Time: 47,966   Output File Time: 383
+For 3 threads:  Read File Time: 306     Execution Time: 84,811   Output File Time: 507
+
+For 3 threads: Average Read File Time: 160.3   Average Execution Time: 59,259.6   Average Output File Time: 428.3
+
+For 2 threads:  Read File Time: 130     Execution Time: 69,640   Output File Time: 279
+For 2 threads:  Read File Time: 139     Execution Time: 54,872   Output File Time: 286
+For 2 threads:  Read File Time: 142     Execution Time: 68,288   Output File Time: 329
+For 2 threads:  Read File Time: 156     Execution Time: 82,552   Output File Time: 374
+For 2 threads:  Read File Time: 255     Execution Time: 89,552   Output File Time: 311
+For 2 threads:  Read File Time: 175     Execution Time: 87,390   Output File Time: 336
+For 2 threads:  Read File Time: 170     Execution Time: 70,138   Output File Time: 392
+For 2 threads:  Read File Time: 132     Execution Time: 70,998   Output File Time: 407
+For 2 threads:  Read File Time: 128     Execution Time: 72,851   Output File Time: 326
+For 2 threads:  Read File Time: 155     Execution Time: 80,828   Output File Time: 450
+
+For 2 threads: Average Read File Time: 158.2   Average Execution Time: 74,710.8   Average Output File Time: 349
+
+For 1 threads:  Read File Time: 154     Execution Time: 126,567  Output File Time: 325
+For 1 threads:  Read File Time: 205     Execution Time: 125,658  Output File Time: 284
+For 1 threads:  Read File Time: 138     Execution Time: 118,014  Output File Time: 303
+For 1 threads:  Read File Time: 187     Execution Time: 119,370  Output File Time: 293
+For 1 threads:  Read File Time: 133     Execution Time: 117,058  Output File Time: 446
+For 1 threads:  Read File Time: 130     Execution Time: 120,678  Output File Time: 290
+For 1 threads:  Read File Time: 151     Execution Time: 94,917   Output File Time: 279
+For 1 threads:  Read File Time: 234     Execution Time: 132,473  Output File Time: 311
+For 1 threads:  Read File Time: 125     Execution Time: 115,034  Output File Time: 392
+For 1 threads:  Read File Time: 143     Execution Time: 117,536  Output File Time: 269
+
+For 1 threads: Average Read File Time: 160   Average Execution Time: 118,730.5   Average Output File Time: 319.2

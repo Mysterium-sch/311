@@ -5,42 +5,47 @@
 #include <ctime>
 using namespace std;
 
-class FileGenerate {
-    
-    public:
-    FileGenerate() {
-    }
+int main(int argc, char **argv) { 
 
-void creator()
-{
     int cases = 0;
     srand (time(0));
     vector<int> keys;
 
-    string filename1 = "ten_"+to_string(cases)+".txt";
+    string filename1 = "bigBoy.txt";
     std::ofstream output_file1(filename1);
 
-    while(cases < 1000000) {
+    output_file1 << "N 4";
+
+    while(cases < 1000) {
         string comand;
-        int key = rand()%(4000000);
+        int key = rand()%(400000);
         int dec = rand()%3;
 
         if(dec == 1) {
-            comand = "L" + to_string(keys.at((int)(rand()%keys.size())));
+            int dec1 = rand()%2;
+            if(dec1 == 1) {
+                key = keys.at((rand()%keys.size()-1));
+            }
+            comand = "L " + to_string(key);
         } else if (dec == 2){
-            comand = "D" + to_string(key);
+            int dec1 = rand()%2;
+            if(dec1 == 1) {
+                key = keys.at((rand()%keys.size()-1));
+            } else {
+            keys.push_back(key);
+            }
+            comand = "D " + to_string(key);
         } else {
             string ker = to_string(key);
-            comand = "I" + ker + "whoop whoop " + ker;
+            keys.push_back(key);
+            comand = "I " + ker + " whoop whoop " + ker;
         }
-    
-    
-    output_file1 << comand << "\n";
+        output_file1 << "\n" << comand;
 
     cases++;
 
 }
 output_file1.close();
 }
-};
+
 

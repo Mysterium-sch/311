@@ -87,6 +87,8 @@ int main(int argc, char **argv) {
         }
     }
 
+    auto mid2 = high_resolution_clock::now();
+
     //Output to file
     ofstream outFile;
     outFile.open(out_filename);
@@ -97,16 +99,15 @@ int main(int argc, char **argv) {
 
     map.reset();
     outFile.close();
-
-    cout << "File Execution Completed\n";
     
-    ofstream exect;
-    exect.open("Execution_Time");
     auto stop = high_resolution_clock::now();
     auto duration1 = duration_cast<microseconds>(mid - start);
-    auto duration2 = duration_cast<microseconds>(stop - mid);
-    exect << "For " << threadcount << " threads:\tRead File Time:\t" << duration1.count() << "\tExecution Time:\t" << duration2.count() << "\n";
-    exect.close();
+    auto duration2 = duration_cast<microseconds>(mid2 - mid);
+    auto duration3 = duration_cast<microseconds>(stop - mid2);
+    cout << "For " << threadcount << " threads:\tRead File Time: " << duration1.count() << "\tExecution Time: " << duration2.count() << "\tOutput File Time: " << duration3.count() << "\n";
+    
+    cout << "File Execution Completed\n";
+
 }
 
 void* letEmRun(void *v) {
@@ -144,9 +145,11 @@ void* letEmRun(void *v) {
             //lookup
             lookup(keyRand);
         }
-        actionQueue.pop();
         }
 
+    if(actionQueue.size() > 0) {
+        actionQueue.pop();
+    }
     pthread_mutex_unlock(&mutexer);
     pthread_exit(NULL);
 }

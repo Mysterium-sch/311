@@ -1,23 +1,101 @@
 N 4
-I 12 hello
-I 32 I
-I 34 hate
-I 1 this
-I 21 stupid
-I 10 project
-I 100 please
-I 100 oops I shouldnt be here
-I 65 help
-I 78 me
-D 78
-L 78
-D 65
-D 65
-I 65 whop whop
-L 65
-I 20 yes
-D 20
-L 20
-I 20 hey
-D 20
-L 20
+D 99373
+I 382171 whoop whoop 382171
+L 1
+L 0
+I 70194 whoop whoop 70194
+D 206340
+D 143690
+I 252681 whoop whoop 252681
+L 3
+I 70796 whoop whoop 70796
+I 40737 whoop whoop 40737
+I 313384 whoop whoop 313384
+L 7
+I 74083 whoop whoop 74083
+L 8
+L 7
+I 297215 whoop whoop 297215
+D 380928
+I 394254 whoop whoop 394254
+L 8
+I 323067 whoop whoop 323067
+I 371921 whoop whoop 371921
+I 25294 whoop whoop 25294
+D 358919
+D 126153
+D 218821
+D 148046
+L 1
+I 313987 whoop whoop 313987
+I 375295 whoop whoop 375295
+D 94800
+D 110012
+I 356272 whoop whoop 356272
+L 13
+D 24786
+I 382016 whoop whoop 382016
+L 22
+L 26
+D 289837
+L 13
+D 257905
+L 10
+D 301829
+L 27
+L 26
+D 45950
+D 106599
+I 288756 whoop whoop 288756
+D 183796
+L 31
+I 67380 whoop whoop 67380
+I 22038 whoop whoop 22038
+I 170734 whoop whoop 170734
+I 18953 whoop whoop 18953
+L 21
+L 32
+I 224267 whoop whoop 224267
+D 178057
+L 19
+L 27
+L 24
+L 30
+D 292333
+L 10
+I 72222 whoop whoop 72222
+L 40
+L 37
+I 135786 whoop whoop 135786
+D 332792
+I 279145 whoop whoop 279145
+I 156880 whoop whoop 156880
+L 37
+D 739
+D 140999
+D 119183
+I 388426 whoop whoop 388426
+D 206365
+I 158591 whoop whoop 158591
+D 362136
+D 124319
+D 240720
+D 313445
+L 53
+D 371425
+D 105698
+I 331621 whoop whoop 331621
+D 41892
+D 383270
+L 3
+I 399600 whoop whoop 399600
+L 29
+L 45
+D 321231
+D 144242
+I 73465 whoop whoop 73465
+I 111197 whoop whoop 111197
+L 44
+L 55
+L 46
+I 365185 whoop whoop 365185
