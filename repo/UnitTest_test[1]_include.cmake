@@ -1,0 +1,5 @@
+if(EXISTS "/home/lamblily90/CSCE311/repo/UnitTest_test[1]_tests.cmake")
+  include("/home/lamblily90/CSCE311/repo/UnitTest_test[1]_tests.cmake")
+else()
+  add_test(UnitTest_test_NOT_BUILT UnitTest_test_NOT_BUILT)
+endif()

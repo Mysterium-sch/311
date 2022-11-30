@@ -1,0 +1,1 @@
+/usr/lib/ccache/c++     CMakeFiles/Lab_3.dir/Lab3.cpp.o CMakeFiles/Lab_3.dir/Binary_st.cpp.o  -o Lab_3  -lpthread 

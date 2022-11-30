@@ -8,18 +8,17 @@
 #include <pthread.h>
 
 #include "Binary_st.cpp"
-
-using namespace std;
 using namespace std::chrono;
 
+//Constants
 int words_in = 0;
 const int size = pow(2,22);
 int total = 0;
 BinaryTree map;
 
 // Indivudal operation queue
-queue<string> actionQueue;
-queue<string> output;
+std::queue<std::string> actionQueue;
+std::queue<std::string> output;
 
 // Pthread things
 pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
@@ -27,23 +26,22 @@ pthread_mutex_t mutexer = PTHREAD_MUTEX_INITIALIZER;
 // Methods
 void* letEmRun(void *);
 
-void inserter(string);
+void inserter(std::string);
 void deleter(int);
 void lookup(int);
-
+    
 int main(int argc, char **argv) { 
-
     auto start = high_resolution_clock::now();
 
-    string type, holder, value, key;
+    std::string type, holder, value, key;
     int threadcount;
-
-    string in_filename;
+    
+    std::string in_filename;
     in_filename = argv[1];
-    string out_filename;
+    std::string out_filename;
     out_filename = argv[2];
-
-    ifstream input_file;
+    
+    std::ifstream input_file;
     input_file.open(in_filename);
 
     // Get thread count
@@ -51,16 +49,16 @@ int main(int argc, char **argv) {
     if (type.compare("N")==0) {
         input_file >> holder;
         threadcount = stoi(holder);
-        string out = "Using " + to_string(threadcount) + " threads";
+        std::string out = "Using " + std::to_string(threadcount) + " threads";
         output.push(out);
     }
-
+    
     pthread_t ptid[threadcount];
     int index;
 
     //Pull all actions from input file
     while(input_file.good()) {
-        string nextline;
+        std::string nextline;
         getline( input_file, nextline );
         actionQueue.push(nextline);
     }
@@ -90,7 +88,7 @@ int main(int argc, char **argv) {
     auto mid2 = high_resolution_clock::now();
 
     //Output to file
-    ofstream outFile;
+    std::ofstream outFile;
     outFile.open(out_filename);
     while(!output.empty()) {
         outFile << output.front() << "\n";
@@ -104,18 +102,16 @@ int main(int argc, char **argv) {
     auto duration1 = duration_cast<microseconds>(mid - start);
     auto duration2 = duration_cast<microseconds>(mid2 - mid);
     auto duration3 = duration_cast<microseconds>(stop - mid2);
-    cout << "For " << threadcount << " threads:\tRead File Time: " << duration1.count() << "\tExecution Time: " << duration2.count() << "\tOutput File Time: " << duration3.count() << "\n";
-    
-    cout << "File Execution Completed\n";
-
+    std::cout << "For " << threadcount << " threads:\tRead File Time: " << duration1.count() << "\tExecution Time: " << duration2.count() << "\tOutput File Time: " << duration3.count() << "\n";
+    std::cout << "File Execution Completed\n";
 }
 
 void* letEmRun(void *v) {
     pthread_mutex_lock(&mutexer);
-        string nextAction = actionQueue.front();
-        string temp, type, key;
-        string value = "";
-        stringstream words_A(nextAction);
+        std::string nextAction = actionQueue.front();
+        std::string temp, type, key;
+        std::string value = "";
+        std::stringstream words_A(nextAction);
 
         words_A >> type;
         words_A >> key;
@@ -131,10 +127,10 @@ void* letEmRun(void *v) {
         if(type.compare("I") == 0) {
             //insert
             if(total<size) {
-                string holder = to_string(keyRand) + " " + value;
+                std::string holder = std::to_string(keyRand) + " " + value;
                 inserter(holder);
             } else {
-                string out = "Max size of " + to_string(size) + " reached";
+                std::string out = "Max size of " + std::to_string(size) + " reached";
                 output.push(out);
             }
 
@@ -152,11 +148,12 @@ void* letEmRun(void *v) {
     }
     pthread_mutex_unlock(&mutexer);
     pthread_exit(NULL);
+
 }
 
-void inserter(string keyAndValue) {
-    stringstream ss(keyAndValue);
-    string kv, value, hold;
+void inserter(std::string keyAndValue) {
+    std::stringstream ss(keyAndValue);
+    std::string kv, value, hold;
     ss >> kv;
     while (ss>>hold) {
         value += hold + " ";
@@ -173,19 +170,19 @@ void inserter(string keyAndValue) {
 }
 void deleter(int key) {
     if(map.remove_key(key)) {
-         output.push("OK");
+        output.push("OK");
         total--;
     } else {
         output.push("FAIL");
     }
 }
+
 void lookup(int key) {
-    string found = map.Keysearcher(key);
+    std::string found = map.Keysearcher(key);
         if(found.compare("nulll") != 0) {
             output.push(found);
         } else {
-            string out = "no " + to_string(key); 
+            std::string out = "no " + std::to_string(key); 
             output.push(out);
     }
-
 }

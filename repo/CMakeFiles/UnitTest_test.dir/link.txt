@@ -1,0 +1,1 @@
+/usr/lib/ccache/c++     CMakeFiles/UnitTest_test.dir/UnitTest.cpp.o CMakeFiles/UnitTest_test.dir/Binary_st.cpp.o  -o UnitTest_test  lib/libgtest_main.a lib/libgtest.a -lpthread 

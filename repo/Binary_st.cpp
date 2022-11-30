@@ -6,17 +6,16 @@
 #include <cmath>
 #include <mutex>
 #include <chrono>
-using namespace std;
 
 class node {
     public:
         int key;
-        string value;
+        std::string value;
         node* left = NULL;
         node* right = NULL;
         bool nulll;
 
-        node(int k, string v) {
+        node(int k, std::string v) {
             key = k;
             value = v;
             nulll = false;
@@ -29,14 +28,14 @@ class node {
 
     };
 
-void input(string);
-bool insert(int, string);
-void insert_real(node*, string, int);
+void input(std::string);
+bool insert(int, std::string);
+void insert_real(node*, std::string, int);
 bool remove_key(int);
 void remove_key_real(node*, int);
-bool Stringsearch(string);
-void StringSearcher_real(node*, string);
-string Keysearcher(int);
+bool Stringsearch(std::string);
+void StringSearcher_real(node*, std::string);
+std::string Keysearcher(int);
 void printer();
 void print_real(node*);
 void reset();
@@ -57,7 +56,7 @@ void reset() {
     root = new node();
 }
 
-bool insert(int key, string value) {
+bool insert(int key, std::string value) {
     bool results;
     mutexy.lock();
     if((Keysearcher_inner(key)).compare("nulll") == 0) {
@@ -77,7 +76,7 @@ bool insert(int key, string value) {
     mutexy.unlock();
     return results;
 }
-void insert_real(node* cur, string value, int key) {
+void insert_real(node* cur, std::string value, int key) {
     int holderL = cur->key;
        if (holderL < key ) {
             bool right = cur->right->nulll;
@@ -220,7 +219,7 @@ void insert_real(node* cur, string value, int key) {
     }
  }
 
-string Keysearcher_inner(int key) {
+std::string Keysearcher_inner(int key) {
     if(hasRoot) {
     bool done = false;
     node cur = *root;
@@ -241,7 +240,7 @@ string Keysearcher_inner(int key) {
 }
 
 
-string Keysearcher(int key) {
+std::string Keysearcher(int key) {
     mutexy.lock();
     if(hasRoot) {
     bool done = false;
@@ -275,11 +274,11 @@ void print_real(node* cur)
         return;
  
     print_real(cur->left);
-    cout << '(' << cur->key << ',' << cur->value << ") \n";
+    std::cout << '(' << cur->key << ',' << cur->value << ") \n";
     print_real(cur->right);
 }
 
-bool StringSearcher(string value) {
+bool StringSearcher(std::string value) {
     if(hasRoot) {
     found = false;
     StringSearcher_real(root, value);
@@ -287,7 +286,7 @@ bool StringSearcher(string value) {
     }
     return false;
 }
-void StringSearcher_real(node* cur, string value) {
+void StringSearcher_real(node* cur, std::string value) {
     if (cur->value.compare(value) == 0) {
         found = true;
     } 

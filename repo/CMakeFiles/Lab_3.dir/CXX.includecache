@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/lamblily90/CSCE311/repo/Binary_st.cpp
+iostream
+-
+string
+-
+cstdlib
+-
+fstream
+-
+ctime
+-
+cmath
+-
+mutex
+-
+chrono
+-
+
+/home/lamblily90/CSCE311/repo/Lab3.cpp
+iostream
+-
+string
+-
+cmath
+-
+fstream
+-
+sstream
+-
+chrono
+-
+queue
+-
+pthread.h
+-
+Binary_st.cpp
+/home/lamblily90/CSCE311/repo/Binary_st.cpp
+
