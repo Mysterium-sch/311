@@ -40,3 +40,5 @@ For unit testing, I chose GTest. Within my testing file (UnitTest.cpp) I tested 
 
 # Categorize your performance on reasonable input
 I would argue that the performance is high. The program can handle many inserts, deletes, and lookups and are very accurate. The Program also scales (from 118,730.5 for 1 thread to 52,965.6 for 4). While the program does have areas for improvement, there is a high-performance rate. The binary tree structure allows for this high performance. It is able to handle insertions, deletions and lookups without error, aswell as the ability to handle high amounts of each. The unit testing also further proves this. The program takes in the input file correctly and outputs to the corresponding output file with correct information.
+
+It should be noted that while the performance runs accurately, it does have some difficulty with high volume files. The largest test file tested successfully was 500 lines; however, when attempting to run a file with one million lines - the program was seemingly caught in a loop. Other than this, the performance is high.
